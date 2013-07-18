@@ -26,6 +26,10 @@ class Mario extends Player {
     handleKey('A');
     handleKey('S');
     handleKey('D');
+    handleKey(UP);
+    handleKey(DOWN);
+    handleKey(LEFT);
+    handleKey(RIGHT);
     // forces that act on Mario
     setImpulseCoefficients(DAMPENING, DAMPENING);
     setForces(0, DOWN_FORCE);
@@ -105,8 +109,8 @@ class Mario extends Player {
     if (active.name=="dead" || active.name=="won") return;
 
     // what do we "do"? (i.e. movement wise)
-    if (active.name!="crouching" && (isKeyDown('A') || isKeyDown('D'))) {
-      if (isKeyDown('A')) {
+    if (active.name!="crouching" && (isKeyDown('A') || isKeyDown('D') || isKeyDown(LEFT) || isKeyDown(RIGHT))) {
+      if (isKeyDown('A') || isKeyDown(LEFT)) {
         // when we walk left, we need to flip the sprite
         setHorizontalFlip(true);
         // walking left means we get a negative impulse along the x-axis:
@@ -114,7 +118,7 @@ class Mario extends Player {
         // and we set the viewing direction to "left"
         setViewDirection(-1, 0);
       }
-      if (isKeyDown('D')) {
+      if (isKeyDown('D') || isKeyDown(RIGHT)) {
         // when we walk right, we need to NOT flip the sprite =)
         setHorizontalFlip(false);
         // walking right means we get a positive impulse along the x-axis:
@@ -125,8 +129,10 @@ class Mario extends Player {
     }
 
     // if the jump key is pressed, and we're standing on something, let's jump! 
-    if (active.mayChange() && isKeyDown('W') && boundaries.size()>0) {
-      ignore('W');
+    if (active.mayChange() && (isKeyDown('W') || isKeyDown(UP)) && boundaries.size()>0) {
+      if (isKeyDown('W')) ignore('W');
+      if (isKeyDown(UP)) ignore(UP);
+
       // generate a massive impulse upward
       addImpulse(0, -35);
       // and make sure we look like we're jumping, too
@@ -140,7 +146,7 @@ class Mario extends Player {
 
     // if we're not jumping, but left or right is pressed,
     // make sure we're using the "running" state.
-    if (isKeyDown('S')) {
+    if (isKeyDown('S') || isKeyDown(DOWN)) {
       if (boundaries.size()>0) {
         for(Boundary b: boundaries) {
           if(b instanceof PipeBoundary) {
@@ -158,7 +164,7 @@ class Mario extends Player {
     // and what do we look like when we do this?
     if (active.mayChange())
     {
-      if (active.name!="crouching" && (isKeyDown('A') || isKeyDown('D'))) {
+      if (active.name!="crouching" && (isKeyDown('A') || isKeyDown('D') || isKeyDown(LEFT) || isKeyDown(RIGHT))) {
        setCurrentState("running");
       }
 
