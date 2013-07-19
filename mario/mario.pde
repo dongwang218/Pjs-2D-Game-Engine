@@ -30,7 +30,8 @@ void reset() {
   addScreen("Bonus Level", new BonusLevel(width, height));
   addScreen("Dark Level", new DarkLevel(width, height));
   addScreen("Main Level", new MainLevel(4*width, height));  
+  addScreen("Boss Level", new BossLevel(width, height));  
   if(javascript != null) { javascript.reset(); }
-  setActiveScreen("Main Level");
+  setActiveScreen("Boss Level"); //"Main Level");
 }
 

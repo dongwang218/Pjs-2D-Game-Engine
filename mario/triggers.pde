@@ -43,7 +43,7 @@ class BanzaiBillTrigger extends MarioTrigger {
     super("banzai bill", x, y, w, h, _px, _py, _ix, _iy);
   }
   void run(LevelLayer layer, Actor actor, float[] intersection) {
-    BanzaiBill b = new BanzaiBill(x+px, py);
+    BanzaiBill b = new BanzaiBill(x+px, py, null, null);
     if (fx>0) { b.setHorizontalFlip(true); }
     b.setImpulse(ix, iy);
     layer.addInteractor(b);

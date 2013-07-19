@@ -50,6 +50,15 @@
                   graphics/backgrounds/sky.gif,
                   graphics/backgrounds/sky_2.gif,
 
+                  graphics/backgrounds/bricks.gif,
+                  graphics/enemies/boss-inshell.gif,
+                  graphics/enemies/boss-die.gif,
+                  graphics/enemies/boss-standing.gif,
+                  graphics/enemies/boss-walking.gif,
+                  graphics/enemies/boss-flying.gif,
+                  graphics/enemies/boss-throwing.gif,
+                  graphics/enemies/mountain1.gif,
+
                   graphics/decals/100.gif,
                   graphics/decals/200.gif,
                   graphics/decals/300.gif,
