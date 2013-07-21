@@ -4,13 +4,14 @@
 class Boss extends MarioEnemy {
 
   float radial = 100;
-  int numHit = 1;
+  int numHit = 0;
   Boss(float x, float y) {
     super("Boss Trooper");
     setStates();
     //setForces(-0.25, DOWN_FORCE);    
     setImpulseCoefficients(1.2*DAMPENING, DAMPENING);
     setPosition(x,y);
+    //setAnimated(false);
   }
   
   /**
@@ -18,8 +19,8 @@ class Boss extends MarioEnemy {
    */
   void setStates() {
     // idle state
-    State idle = new State("idle", "graphics/enemies/boss-standing.gif", 1, 2);
-    idle.setAnimationSpeed(0.1);
+    State idle = new State("idle", "graphics/enemies/boss-standing.gif");
+    //idle.setAnimationSpeed(0.1);
     idle.setDuration(30);
     addState(idle);
     
@@ -27,21 +28,20 @@ class Boss extends MarioEnemy {
     State flying = new State("flying", "graphics/enemies/boss-flying.gif");
     flying.addPathLine(0, 0, 0, -radial, 15);
     flying.setLooping(false);
-    flying.setAnimationSpeed(0.5);
-    //SoundManager.load(flying, "audio/Squish.mp3");
+    //flying.setAnimationSpeed(0.5);
+    //SoundManager.load(flying, "audio/rock.mp3");
     addState(flying);
 
     // throw mountain
     State throwing = new State("throwing", "graphics/enemies/boss-throwing.gif");
     throwing.setDuration(20);
-    throwing.setAnimationSpeed(0.5);
-    SoundManager.load(throwing, "audio/Squish.mp3");
+    //throwing.setAnimationSpeed(0.5);
     addState(throwing);
 
     State falling = new State("falling", "graphics/enemies/boss-flying.gif");
     falling.addPathLine(0, -radial, 0, 0, 15);
     falling.setLooping(false);
-    falling.setAnimationSpeed(0.5);
+    //falling.setAnimationSpeed(0.5);
     //SoundManager.load(falling, "audio/Squish.mp3");
     addState(falling);
 
@@ -52,18 +52,19 @@ class Boss extends MarioEnemy {
     addState(walking);*/
 
     // if we get squished, we first get inshell...
-    State inshell = new State("inshell", "graphics/enemies/boss-inshell.gif", 1, 2);
-    inshell.setAnimationSpeed(0.12);
+    State inshell = new State("inshell", "graphics/enemies/boss-inshell.gif", 1, 1);
+    //inshell.setAnimationSpeed(0.12);
     inshell.setDuration(350); // get to the other side
-    SoundManager.load(inshell, "audio/Squish.mp3");
     addState(inshell);
+    inshell.sprite.setLooping(true);
+    SoundManager.load(inshell, "audio/boss-inshell.mp3");
     
 
-    State dead = new State("dead", "graphics/enemies/boss-die.gif");
-      dead.setAnimationSpeed(0.25);
-      dead.setDuration(100);
-      addState(dead);   
-      SoundManager.load(dead, "audio/Squish.mp3");
+    State die = new State("die", "graphics/enemies/boss-die.gif");
+    //die.addPathLine(0, 0, 0, radial, 15);
+    die.setDuration(15);
+    addState(die);   
+    SoundManager.load(die, "audio/boss-die.mp3");
 
     setCurrentState("idle");
   }
@@ -81,16 +82,26 @@ class Boss extends MarioEnemy {
   }
   
   void hit() {
+    //println("boss tohit");
+    if (isDisabled()) return;
+    //disableInteractionFor(30);
     SoundManager.play(active);
 
+    //println("boss hit");
     // do we have our shell? Then we only get half-squished.
     if (active.name != "inshell") {
       numHit += 1;
-      if (numHit == 2)
+      if (numHit >= 2) {
+        //println("boss die");
         setCurrentState("die");
-      else {
+        setImpulse(0, 2);
+        setForces(0, DOWN_FORCE);
+        setPosition(x, y-15);    
+      } else {
         setCurrentState("inshell");
-        setForces(-0.5, 0);
+        setForces(-0.5, DOWN_FORCE);
+        Player player = layer.players.get(0);
+        player.disableInteractionFor(30);
       }
     }
     
@@ -116,14 +127,19 @@ class Boss extends MarioEnemy {
     } else if (which.name == "falling") {
       setCurrentState("idle");
     } else if (which.name == "inshell") {
+      disableInteractionFor(0);
       setForces(0, 0);
       setCurrentState("idle");
       setHorizontalFlip(true);
     } else if (which.name == "die") {
       // no shell... this boss is toast.
+      KeyPickup key = new KeyPickup(200,0);
+      key.setForces(0, 0);
+      key.setAcceleration(0, 0);
+      key.setImpulse(0, 3);
+      key.setRotation(PI/2);
+      layer.addForPlayerOnly(key);
       removeActor();
-      KeyPickup key = new KeyPickup(2000,364);
-      addForPlayerOnly(key);
     }
   }
 

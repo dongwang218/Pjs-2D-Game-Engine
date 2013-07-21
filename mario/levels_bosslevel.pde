@@ -14,7 +14,7 @@ class BossLevel extends MarioLevel
     mario.setPosition(width/8, height-32);
     layer.addPlayer(mario);
 
-    SoundManager.load(this, "audio/bg/Bonus.mp3");
+    SoundManager.load(this, "audio/bg/Overworld.mp3");
   }
   
   void updateMario(Player p) {
@@ -38,4 +38,10 @@ class BossLevel extends MarioLevel
     super.finish();
   }  
 
+  void reset() { 
+    //println("boss layer reset is called");
+    clearScreens();
+    addScreen("Boss Level", new BossLevel(width, height));  
+    setActiveScreen("Boss Level");
+  }
 }

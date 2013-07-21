@@ -19,7 +19,7 @@ float DAMPENING = 0.75;
  * level, which we'll 
  */
 void initialize() {
-  SoundManager.mute(true);
+  SoundManager.mute(false);
   SoundManager.setDrawPosition(screenWidth-10, 10);
   frameRate(30);
   reset();
@@ -27,9 +27,9 @@ void initialize() {
 
 void reset() {
   clearScreens();
-  addScreen("Bonus Level", new BonusLevel(width, height));
+  /*addScreen("Bonus Level", new BonusLevel(width, height));
   addScreen("Dark Level", new DarkLevel(width, height));
-  addScreen("Main Level", new MainLevel(4*width, height));  
+  addScreen("Main Level", new MainLevel(4*width, height));  */
   addScreen("Boss Level", new BossLevel(width, height));  
   if(javascript != null) { javascript.reset(); }
   setActiveScreen("Boss Level"); //"Main Level");

@@ -78,7 +78,7 @@ class Mario extends Player {
     State jumping = new State("jumping", "graphics/"+spriteSet+"/"+type+"/Jumping-mario.gif");
     jumping.setDuration(15);
     addState(jumping);
-    SoundManager.load(jumping, "audio/Jump.mp3");
+    SoundManager.load(jumping,  "audio/Jump.mp3");
 
     // crouchjumping state
     State crouchjumping = new State("crouchjumping", "graphics/"+spriteSet+"/"+type+"/Crouching-mario.gif");
@@ -90,7 +90,8 @@ class Mario extends Player {
     State won = new State("won", "graphics/"+spriteSet+"/"+type+"/Standing-mario.gif");
     won.setDuration(240);
     addState(won);
-    
+    SoundManager.load("won", "audio/won.mp3");
+
     // being hit requires a sound effect too
     SoundManager.load("mario hit", "audio/Pipe.mp3");
   }
@@ -183,7 +184,7 @@ class Mario extends Player {
   void handleStateFinished(State which) {
     if (which.name == "dead" || which.name == "won") {
       removeActor();
-      reset();
+      layer.parent.reset();
     } 
     else { setCurrentState("idle"); }
   }
@@ -213,6 +214,7 @@ class Mario extends Player {
   }
   
   void hit() {
+    //println("mario got hit");
     if(isDisabled()) return; 
     if(type != "small") {
       setSpriteType("small");
@@ -251,7 +253,7 @@ class Mario extends Player {
       score+=100;
     }
     // we won!
-    else if (pickup.name=="Finish line") {
+    else if (pickup.name=="Finish line" || pickup.name == "Key") {
       if (spriteSet == "rtype") {
         setForces(0, DOWN_FORCE);
         setAcceleration(0, ACCELERATION);
@@ -259,7 +261,11 @@ class Mario extends Player {
       spriteSet = "mario";
       Level level = layer.getLevel();
       setCurrentState("won");
-      layer.parent.finish();
+      SoundManager.stop(getLevelLayer().getLevel());
+      // play victory music!
+      SoundManager.play("won");
+
+      //layer.parent.finish();
     }
     // big mario
     else if (pickup.name=="Mushroom") {
@@ -274,6 +280,7 @@ class Mario extends Player {
     }
     // key?
     else if (pickup.name=="Key") {
+      //println("got key");
       getKey();
     }
   }

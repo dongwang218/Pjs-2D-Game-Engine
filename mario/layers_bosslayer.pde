@@ -22,10 +22,11 @@ class BossLayer extends MarioLayer {
     addGroundPlatform("cave", width/2-w2, height-48, w4, 32);
     addGroundPlatform("cave", width/2-w4, height-32, w8, 16);*/
 
-    Boss boss = new Boss(width/8*7, height-45);
+    Boss boss = new Boss(width/8*7, height-40);
     boss.setLevelLayer(this);
     addInteractor(boss);
   }
 
-  
+  void reset() {
+  }
 }
